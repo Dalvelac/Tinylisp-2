@@ -1,8 +1,10 @@
 https://github.com/Dalvelac/Tinylisp-2/
 
+# Enunciado del ejercicio
+
 # Descripción General
 
-Se puede ver el codigo original utilizado para implementar las funciones dadas en la rubrica: 
+Se puede ver el codigo original en este repositorio: 
 https://github.com/Dalvelac/Caso-final-integrador-Daniel-Alves
 
 Este documento describe la implementación de la funcionalidad para cargar y evaluar scripts en el lenguaje TinyLisp. La funcionalidad permite cargar un archivo de texto, leer las instrucciones del script y evaluar las expresiones usando la lógica de evaluación ya presente en el código. Se han implementado dos funciones principales para la carga de scripts:
