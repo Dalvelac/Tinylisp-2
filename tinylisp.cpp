@@ -1,80 +1,19 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <stack>
 #include <vector>
-#include <string>
 #include <sstream>
 #include <stdexcept>
 #include <cmath>
 #include <algorithm>
 #include <unordered_map>
 #include <functional>
-#include <cstdio>
 
-using namespace std;
+// Prototipos de funciones
+void load_script(const char* filename, bool show_script = false);
+void load_script();
 
-// Color Console Structure
-struct ColorConsole {
-    static constexpr auto fg_blue = "\033[34m";
-    static constexpr auto bg_white = "\033[47m";
-};
-
-// ConsoleBox Structure for Display
-struct ConsoleBox {
-    void new_text() {} // empty function, you can add your custom logic here if needed
-    void set_text(const std::string& text) { cout << text << '\n'; }
-};
-
-ConsoleBox* consoleBox = new ConsoleBox; // initialize the console box pointer to a newly created ConsoleBox object
-
-// Implementación de load_script()
-void load_script(const char* filename, bool show_script = false)
-{
-    string script;
-    FILE* f = nullptr;
-    try
-    {
-        f = fopen(filename, "rb");
-        if (!f)
-        {
-            cerr << "error de apertura de " << filename << endl;
-            return;
-        }
-
-        int c;
-        char buf[4001];
-        while ((c = fread(buf, 1, 4000, f)) > 0)
-        {
-            buf[c] = 0;
-            script.append(buf);
-        }
-        fclose(f);
-        f = nullptr;
-
-        if (show_script)
-        {
-            cout << ColorConsole::fg_blue << ColorConsole::bg_white;
-            cout << script << endl;
-        }
-        consoleBox->new_text();
-        consoleBox->set_text(script);
-    }
-    catch (...)
-    {
-        cerr << "error durante la lectura del archivo" << endl;
-        if (f) fclose(f);
-    }
-}
-
-// Implementación de load_script()
-void load_script()
-{
-    char filename[500];
-    printf("Archivo: ");
-    scanf("%499s", filename);
-    load_script(filename, true);
-}
-
-// Tokenizing and Evaluating Logic
 typedef std::vector<std::string> Tokens;
 std::unordered_map<std::string, double> variables;
 std::unordered_map<std::string, std::pair<int, std::function<double(const std::vector<double>&)>>> functions;
@@ -352,21 +291,65 @@ double evaluate(Tokens& tokens, std::unordered_map<std::string, double> localVar
     return stack.top();
 }
 
+// Implementación de load_script(const char* filename, bool show_script)
+void load_script(const char* filename, bool show_script) {
+    std::ifstream file(filename);
+
+    if (!file) {
+        std::cerr << "Error: No se pudo abrir el archivo " << filename << std::endl;
+        return;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        if (show_script) {
+            std::cout << line << std::endl;
+        }
+        try {
+            Tokens tokens = tokenize(line);
+            evaluate(tokens);
+        } catch (const std::exception& e) {
+            std::cerr << "Error al evaluar el script: " << e.what() << std::endl;
+        }
+    }
+
+    if (file.bad()) {
+        std::cerr << "Error: Se produjo un error durante la lectura del archivo " << filename << std::endl;
+    }
+
+    file.close();
+}
+
+// Implementación de load_script() que solicita el nombre del archivo al usuario
+void load_script() {
+    std::string filename;
+    std::cout << "Ingrese el nombre del archivo: ";
+    std::getline(std::cin, filename);
+
+    if (filename.empty()) {
+        std::cerr << "Error: No se proporcionó un nombre de archivo." << std::endl;
+        return;
+    }
+
+    load_script(filename.c_str(), true);
+}
+
 int main() {
     std::string input;
     while (true) {
         std::cout << ">> ";
         std::getline(std::cin, input);
         if (input == "Salir") break;
-        if (input == "CargarScript") {
-            load_script();
-            continue;
-        }
-        try {
-            Tokens tokens = tokenize(input);
-            std::cout << evaluate(tokens) << std::endl;
-        } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << std::endl;
+        if (input.rfind("load ", 0) == 0) {
+            std::string filename = input.substr(5);
+            load_script(filename.c_str(), true);
+        } else {
+            try {
+                Tokens tokens = tokenize(input);
+                std::cout << evaluate(tokens) << std::endl;
+            } catch (const std::exception& e) {
+                std::cerr << "Error: " << e.what() << std::endl;
+            }
         }
     }
     return 0;
