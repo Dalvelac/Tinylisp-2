@@ -66,7 +66,7 @@ La evaluación de las expresiones se realiza usando evaluate(), que permite real
 
 https://github.com/victoriavillapad06/3_Caso_Integrador
 
-**Puntuación: 8/10**
+**Puntuación: 9/10**
 Puntos positivos:
 
 Estructura clara y modularidad:
