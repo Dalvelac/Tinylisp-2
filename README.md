@@ -67,23 +67,24 @@ La evaluación de las expresiones se realiza usando evaluate(), que permite real
 https://github.com/victoriavillapad06/3_Caso_Integrador
 
 **Puntuación: 9/10**
+
 Puntos positivos:
 
-Estructura clara y modularidad:
-        Usas funciones separadas para diferentes tareas (load_script con y sin argumentos), lo cual mejora la legibilidad y mantenibilidad.
+## Estructura clara y modularidad:
+Usas funciones separadas para diferentes tareas (load_script con y sin argumentos), lo cual mejora la legibilidad y mantenibilidad.
         
-Uso de estándares modernos:
-        Uso de std::string y istreambuf_iterator para leer el archivo de manera eficiente.
+## Uso de estándares modernos:
+Uso de std::string y istreambuf_iterator para leer el archivo de manera eficiente.
         
-Gestión básica de errores:
-        Detectas si el archivo no se abre o si el nombre del archivo está vacío.
-        Capturas excepciones en el main para evitar fallos inesperados.
+## Gestión básica de errores:
+Detectas si el archivo no se abre o si el nombre del archivo está vacío.
+Capturas excepciones en el main para evitar fallos inesperados.
         
-Estética de consola:
-        Introduces colores y un cuadro de texto simulado para mejorar la experiencia del usuario.
+## Estética de consola:
+Introduces colores y un cuadro de texto simulado para mejorar la experiencia del usuario.
         
-Extensibilidad:
-        La funcionalidad es fácilmente adaptable para integrar con un intérprete de Tiny Lisp.
+## Extensibilidad:
+La funcionalidad es fácilmente adaptable para integrar con un intérprete de Tiny Lisp.
 
 
 
