@@ -18,6 +18,7 @@ typedef std::vector<std::string> Tokens;
 std::unordered_map<std::string, double> variables;
 std::unordered_map<std::string, std::pair<int, std::function<double(const std::vector<double>&)>>> functions;
 
+// Funcion para dividir una entrada en tokens separados
 Tokens tokenize(const std::string& input) {
     Tokens tokens;
     std::stringstream ss(input);
@@ -28,6 +29,9 @@ Tokens tokenize(const std::string& input) {
     return tokens;
 }
 
+// Funcion para evaluar una expresion en notacion postfija
+// Usa una pila (stack) para almacenar operandos y realizar operaciones
+// La funcion admite variables locales para evaluar funciones personalizadas
 double evaluate(Tokens& tokens, std::unordered_map<std::string, double> localVariables = {}) {
     std::stack<double> stack;
 
@@ -217,6 +221,7 @@ double evaluate(Tokens& tokens, std::unordered_map<std::string, double> localVar
             double a = stack.top(); stack.pop();
             stack.push(round(a));
         } else if (token == "=") {
+            // Operador de asignacion, se espera un nombre de variable para almacenar el valor en la pila
             if (tokens.empty()) {
                 throw std::runtime_error("Falta el nombre de la variable para la asignacion");
             }
@@ -230,6 +235,7 @@ double evaluate(Tokens& tokens, std::unordered_map<std::string, double> localVar
                 std::cout << "El valor ha sido asignado." << std::endl;
             }
         } else if (token == "defun") {
+            // Definicion de una funcion con nombre y parametros
             if (tokens.size() < 3) {
                 throw std::runtime_error("Sintaxis incorrecta para la definicion de funcion");
             }
@@ -240,9 +246,11 @@ double evaluate(Tokens& tokens, std::unordered_map<std::string, double> localVar
             } catch (const std::invalid_argument&) {
                 throw std::runtime_error("El numero de parametros debe ser un entero");
             }
-            Tokens paramNames(tokens.begin(), tokens.begin() + paramCount); // Get parameter names
+            // Obtener nombres de los parametros
+            Tokens paramNames(tokens.begin(), tokens.begin() + paramCount);
             tokens.erase(tokens.begin(), tokens.begin() + paramCount);
             Tokens bodyTokens(tokens);
+            // Almacenar la funcion en el mapa de funciones
             functions[funcName] = {paramCount, [paramNames, bodyTokens](const std::vector<double>& args) -> double {
                 if (args.size() != paramNames.size()) {
                     throw std::runtime_error("Numero incorrecto de argumentos para la funcion");
@@ -258,13 +266,16 @@ double evaluate(Tokens& tokens, std::unordered_map<std::string, double> localVar
             return 0;
         } else {
             try {
+                // Intentar convertir el token en un numero
                 stack.push(std::stod(token));
             } catch (const std::invalid_argument&) {
+                // Si no es un numero, verificar si es una variable, funcion o generar un error
                 if (localVariables.find(token) != localVariables.end()) {
                     stack.push(localVariables[token]);
                 } else if (variables.find(token) != variables.end()) {
                     stack.push(variables[token]);
                 } else if (functions.find(token) != functions.end()) {
+                    // Llamada a una funcion definida por el usuario
                     auto& funcPair = functions[token];
                     int argCount = funcPair.first;
                     std::vector<double> args;
@@ -275,6 +286,7 @@ double evaluate(Tokens& tokens, std::unordered_map<std::string, double> localVar
                         args.push_back(stack.top());
                         stack.pop();
                     }
+                    // Invertir los argumentos ya que se extrajeron en orden inverso
                     std::reverse(args.begin(), args.end());
                     stack.push(funcPair.second(args));
                 } else {
@@ -291,7 +303,7 @@ double evaluate(Tokens& tokens, std::unordered_map<std::string, double> localVar
     return stack.top();
 }
 
-// Implementación de load_script(const char* filename, bool show_script)
+// Implementacion de la funcion load_script para cargar un script desde un archivo
 void load_script(const char* filename, bool show_script) {
     std::ifstream file(filename);
 
@@ -306,6 +318,7 @@ void load_script(const char* filename, bool show_script) {
             std::cout << line << std::endl;
         }
         try {
+            // Evaluar cada linea del archivo
             Tokens tokens = tokenize(line);
             evaluate(tokens);
         } catch (const std::exception& e) {
@@ -320,20 +333,21 @@ void load_script(const char* filename, bool show_script) {
     file.close();
 }
 
-// Implementación de load_script() que solicita el nombre del archivo al usuario
+// Implementacion de la funcion load_script que solicita el nombre del archivo al usuario
 void load_script() {
     std::string filename;
     std::cout << "Ingrese el nombre del archivo: ";
     std::getline(std::cin, filename);
 
     if (filename.empty()) {
-        std::cerr << "Error: No se proporcionó un nombre de archivo." << std::endl;
+        std::cerr << "Error: No se proporciono un nombre de archivo." << std::endl;
         return;
     }
 
     load_script(filename.c_str(), true);
 }
 
+// Funcion principal para interactuar con el usuario
 int main() {
     std::string input;
     while (true) {
@@ -341,10 +355,12 @@ int main() {
         std::getline(std::cin, input);
         if (input == "Salir") break;
         if (input.rfind("load ", 0) == 0) {
+            // Cargar un script si el comando comienza con "load "
             std::string filename = input.substr(5);
             load_script(filename.c_str(), true);
         } else {
             try {
+                // Evaluar la expresion ingresada por el usuario
                 Tokens tokens = tokenize(input);
                 std::cout << evaluate(tokens) << std::endl;
             } catch (const std::exception& e) {
