@@ -2,7 +2,7 @@ https://github.com/Dalvelac/Tinylisp-2/
 
 # Enunciado del ejercicio
 
-# Descripción General
+## Descripción General
 
 Se puede ver el codigo original en este repositorio: 
 https://github.com/Dalvelac/Caso-final-integrador-Daniel-Alves
@@ -14,7 +14,7 @@ void load_script()
 ```
 Ambas funciones permiten abrir y leer archivos de texto que contienen scripts de TinyLisp, con un manejo adecuado de errores para asegurar la robustez del código.
 
-# Funciones Implementadas
+## Funciones Implementadas
 
 1. void load_script(const char* filename, bool show_script = false)
 
@@ -32,7 +32,7 @@ En el bucle principal del programa (main()), se agregó una nueva funcionalidad 
 
 Ejemplo: El usuario puede escribir load script.txt para cargar y evaluar el script contenido en script.txt.
 
-# Manejo de Errores
+## Manejo de Errores
 
 Para asegurar que el código sea robusto, se han agregado verificaciones para manejar distintos errores posibles:
 
@@ -42,7 +42,7 @@ Errores durante la lectura: Si ocurre un error durante la lectura del archivo, s
 
 Errores en la evaluación: Cualquier excepción generada durante la evaluación de una línea del script se captura y se muestra un mensaje de error.
 
-# Ejemplo de Uso
+## Ejemplo de Uso
 
 Cargar un script desde la consola:
 
@@ -56,8 +56,34 @@ Puede ingresar expresiones directamente en la consola y ver los resultados inmed
 
 Para salir del programa, ingrese Salir.
 
-# Consideraciones Adicionales
+## Consideraciones Adicionales
 
 El código utiliza la función tokenize() para convertir cada línea del script en tokens antes de evaluarlos.
 
 La evaluación de las expresiones se realiza usando evaluate(), que permite realizar operaciones matemáticas y manejar variables y funciones definidas por el usuario.
+
+# Corrección de compañera
+
+https://github.com/victoriavillapad06/3_Caso_Integrador
+
+**Puntuación: 8/10**
+Puntos positivos:
+
+Estructura clara y modularidad:
+        Usas funciones separadas para diferentes tareas (load_script con y sin argumentos), lo cual mejora la legibilidad y mantenibilidad.
+        
+Uso de estándares modernos:
+        Uso de std::string y istreambuf_iterator para leer el archivo de manera eficiente.
+        
+Gestión básica de errores:
+        Detectas si el archivo no se abre o si el nombre del archivo está vacío.
+        Capturas excepciones en el main para evitar fallos inesperados.
+        
+Estética de consola:
+        Introduces colores y un cuadro de texto simulado para mejorar la experiencia del usuario.
+        
+Extensibilidad:
+        La funcionalidad es fácilmente adaptable para integrar con un intérprete de Tiny Lisp.
+
+
+
