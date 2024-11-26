@@ -65,6 +65,7 @@ La evaluación de las expresiones se realiza usando evaluate(), que permite real
 # Corrección de compañera
 
 https://github.com/victoriavillapad06/3_Caso_Integrador
+Compañera: Vicky Villalobos
 
 **Puntuación: 9/10**
 
