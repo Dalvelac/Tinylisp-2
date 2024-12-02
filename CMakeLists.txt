@@ -4,5 +4,6 @@ project(Tinylisp_2)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(Tinylisp_2
-    tinylisp.cpp
-)
+        main.cpp
+        src/calculator.cpp
+        src/calculator.h)
